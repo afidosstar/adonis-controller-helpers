@@ -27,6 +27,8 @@ node ace configure @fickou/adonis-controller-helpers
 ```
 
 # Sample Usage
+ 
+
 
 
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript

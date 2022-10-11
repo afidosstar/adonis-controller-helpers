@@ -5,7 +5,10 @@ import Database, {
 } from "@ioc:Adonis/Lucid/Database";
 import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
 import { WrapIgnore } from "./wrap-ignore";
-import { QueryBuilderContract } from "@ioc:Adonis/Src/ControllerHelper";
+import {
+  ControllerHelperContract,
+  QueryBuilderContract
+} from "@ioc:Adonis/Src/ControllerHelper";
 
 /**
  * @type Error
@@ -13,7 +16,7 @@ import { QueryBuilderContract } from "@ioc:Adonis/Src/ControllerHelper";
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 
-export default class ControllerHelper {
+export default class ControllerHelper implements ControllerHelperContract{
   /**
    *
    * @param query
