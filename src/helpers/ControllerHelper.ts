@@ -7,7 +7,7 @@ import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
 import { WrapIgnore } from "./wrap-ignore";
 import {
   ControllerHelperContract,
-  QueryBuilderContract
+  QueryBuilderContract,
 } from "@ioc:Adonis/Src/ControllerHelper";
 
 /**
@@ -16,7 +16,7 @@ import {
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 
-export default class ControllerHelper implements ControllerHelperContract{
+export default class ControllerHelper implements ControllerHelperContract {
   /**
    *
    * @param query

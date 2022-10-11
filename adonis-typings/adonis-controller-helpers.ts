@@ -7,69 +7,85 @@
  * file that was distributed with this source code.
  */
 
-
-
 declare module "@ioc:Adonis/Src/ControllerHelper" {
-  import {DatabaseContract, DatabaseQueryBuilderContract} from "@ioc:Adonis/Lucid/Database";
+  import {
+    DatabaseContract,
+    DatabaseQueryBuilderContract,
+  } from "@ioc:Adonis/Lucid/Database";
   import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
-  interface WrapIgnoreContract{
+  interface WrapIgnoreContract {
     readonly data;
   }
+
+  interface ServiceConstructor{
+    trx: any,
+    user?:object,
+    event?: object
+  }
+  export interface ServiceContract{
+    new (): ServiceConstructor
+    execute(): Promise<any>;
+  }
+
+
+
+
   export type QueryBuilderContract =
     | ModelQueryBuilderContract<any>
     | DatabaseQueryBuilderContract<any>;
-  export interface ControllerHelperContract{
-
-  }
+  export interface ControllerHelperContract {}
   interface ControllerHelperStaticContract {
-    new ():ControllerHelperContract;
+    new (): ControllerHelperContract;
 
-     search(
-        query: ModelQueryBuilderContract<any>,
-        pagination,
-        filter,
-        populates,
-        selects
-    ): Promise<WrapIgnoreContract>
+    search(
+      query: ModelQueryBuilderContract<any>,
+      pagination,
+      filter,
+      populates,
+      selects
+    ): Promise<WrapIgnoreContract>;
 
-    populates(query: ModelQueryBuilderContract<any>, payload): ModelQueryBuilderContract<any>;
+    populates(
+      query: ModelQueryBuilderContract<any>,
+      payload
+    ): ModelQueryBuilderContract<any>;
 
-    searchPayload(query: ModelQueryBuilderContract<any>, payload): Promise<WrapIgnoreContract>;
+    searchPayload(
+      query: ModelQueryBuilderContract<any>,
+      payload
+    ): Promise<WrapIgnoreContract>;
 
     searchDatabasePayload(
-        query: DatabaseQueryBuilderContract<any>,
-        payload
+      query: DatabaseQueryBuilderContract<any>,
+      payload
     ): Promise<WrapIgnoreContract>;
 
     buildQuery(
-        query: DatabaseContract,
-        callback: (query: DatabaseContract) => DatabaseQueryBuilderContract<any>,
-        name: string
+      query: DatabaseContract,
+      callback: (query: DatabaseContract) => DatabaseQueryBuilderContract<any>,
+      name: string
     ): DatabaseQueryBuilderContract<any>;
 
     searchDatabase(
-        query: DatabaseQueryBuilderContract<any>,
-        pagination,
-        filter,
-        selects
+      query: DatabaseQueryBuilderContract<any>,
+      pagination,
+      filter,
+      selects
     ): Promise<WrapIgnoreContract>;
 
-    selects(
-        query: QueryBuilderContract,
-        payload: Record<string, any>
-    ): void;
+    selects(query: QueryBuilderContract, payload: Record<string, any>): void;
 
     paginateModel(
-        query: ModelQueryBuilderContract<any>,
-        page,
-        perPage
-    ): Promise<Array<Record<string, any>>>
+      query: ModelQueryBuilderContract<any>,
+      page,
+      perPage
+    ): Promise<Array<Record<string, any>>>;
 
     paginate(
-        query: ModelQueryBuilderContract<any> | DatabaseQueryBuilderContract<any>,
-        page,
-        perPage
-    ): Promise<Array<Record<string, any>>>
+      query: ModelQueryBuilderContract<any> | DatabaseQueryBuilderContract<any>,
+      page,
+      perPage
+    ): Promise<Array<Record<string, any>>>;
 
     /**
      *

@@ -27,7 +27,56 @@ node ace configure @fickou/adonis-controller-helpers
 ```
 
 # Sample Usage
- 
+## Controller
+In a controller
+
+```ts
+import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
+import IndexService from 'App/Services/users/Index'
+import Database from "@ioc:Adonis/Lucid/Database";
+
+export default UserController
+{
+public index({ request, response }: HttpContextContract){
+        let data = await request.checkInputs();
+        await Database.transaction(async (trx) => {
+            const executor = new Index(trx);
+            return response.apiView(await executor.execute(data));
+        });
+    }
+}
+```
+
+## Service
+
+In a service:
+```ts
+import Campaign from 'App/Models/settings/Campaign';
+import ControllerHelper,{Service} from "@ioc:Adonis/Src/ControllerHelper";
+
+export default class Index extends Service{
+
+
+  async execute(payload) {
+      const query =  Campaign.query({client: this.trx});
+      return ControllerHelper.searchPayload(query, payload);
+  }
+}
+
+// or 
+
+export default class Index extends Service{
+
+
+    async execute(payload) {
+        const query = ControllerHelper.buildQuery( (this.trx || Database),(db) => db.query()
+            .from('parameters')
+            .select(['*']);
+
+        return ControllerHelper.searchDatabasePayload(query, payload);
+    }
+}
+```
 
 
 
