@@ -9,14 +9,13 @@
 
 declare module "@ioc:Adonis/Addons/ControllerHelper" {
   import {
-  DatabaseContract,
-  DatabaseQueryBuilderContract,
-} from "@ioc:Adonis/Lucid/Database";
+    DatabaseContract,
+    DatabaseQueryBuilderContract,
+  } from "@ioc:Adonis/Lucid/Database";
   import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
   interface WrapIgnoreContract {
     readonly data;
   }
-
 
   export interface ServiceContract {
     execute(payload: Record<string, any>): Promise<any>;
@@ -79,7 +78,11 @@ declare module "@ioc:Adonis/Addons/ControllerHelper" {
       perPage
     ): Promise<Array<Record<string, any>>>;
 
-    generateEqualCond(query: QueryBuilderContract, ids:Array<number>, prop: string): void;
+    generateEqualCond(
+      query: QueryBuilderContract,
+      ids: Array<number>,
+      prop: string
+    ): void;
 
     trans(query: QueryBuilderContract, transaction): QueryBuilderContract;
   }

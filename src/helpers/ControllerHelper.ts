@@ -8,7 +8,7 @@ import { WrapIgnore } from "./wrap-ignore";
 import {
   ControllerHelperContract,
   QueryBuilderContract,
-} from "@ioc:Adonis/Src/ControllerHelper";
+} from "@ioc:Adonis/Addons/ControllerHelper";
 
 /**
  * @type Error
