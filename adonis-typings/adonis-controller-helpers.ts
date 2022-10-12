@@ -7,34 +7,26 @@
  * file that was distributed with this source code.
  */
 
-declare module "@ioc:Adonis/Src/ControllerHelper" {
+declare module "@ioc:Adonis/Addons/ControllerHelper" {
   import {
-    DatabaseContract,
-    DatabaseQueryBuilderContract,
-  } from "@ioc:Adonis/Lucid/Database";
+  DatabaseContract,
+  DatabaseQueryBuilderContract,
+} from "@ioc:Adonis/Lucid/Database";
   import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
   interface WrapIgnoreContract {
     readonly data;
   }
 
-  interface ServiceConstructor{
-    trx: any,
-    user?:object,
-    event?: object
+
+  export interface ServiceContract {
+    execute(payload: Record<string, any>): Promise<any>;
   }
-  export interface ServiceContract{
-    new (): ServiceConstructor
-    execute(): Promise<any>;
-  }
-
-
-
 
   export type QueryBuilderContract =
     | ModelQueryBuilderContract<any>
     | DatabaseQueryBuilderContract<any>;
   export interface ControllerHelperContract {}
-  interface ControllerHelperStaticContract {
+  export interface ControllerHelperStaticContract {
     new (): ControllerHelperContract;
 
     search(
@@ -87,13 +79,7 @@ declare module "@ioc:Adonis/Src/ControllerHelper" {
       perPage
     ): Promise<Array<Record<string, any>>>;
 
-    /**
-     *
-     * @param query
-     * @param ids
-     * @param prop
-     */
-    generateEqualCond(query, ids, prop): void;
+    generateEqualCond(query: QueryBuilderContract, ids:Array<number>, prop: string): void;
 
     trans(query: QueryBuilderContract, transaction): QueryBuilderContract;
   }

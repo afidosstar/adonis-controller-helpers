@@ -35,8 +35,7 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import IndexService from 'App/Services/users/Index'
 import Database from "@ioc:Adonis/Lucid/Database";
 
-export default UserController
-{
+export default UserController{
 public index({ request, response }: HttpContextContract){
         let data = await request.checkInputs();
         await Database.transaction(async (trx) => {
@@ -50,29 +49,30 @@ public index({ request, response }: HttpContextContract){
 ## Service
 
 In a service:
+
 ```ts
-import Campaign from 'App/Models/settings/Campaign';
-import ControllerHelper,{Service} from "@ioc:Adonis/Src/ControllerHelper";
+import Parameter from 'App/Models/settings/Parameter';
+import ControllerHelper, from "@ioc:Adonis/Addons/ControllerHelper";
+import {Service} from "@fickou/adonis-controller-helpers";
 
-export default class Index extends Service{
+export default class Index extends Service {
 
 
-  async execute(payload) {
-      const query =  Campaign.query({client: this.trx});
-      return ControllerHelper.searchPayload(query, payload);
-  }
+    async execute(payload) {
+        const query = Parameter.query({client: this.trx});
+        return ControllerHelper.searchPayload(query, payload);
+    }
 }
 
 // or 
 
-export default class Index extends Service{
+export default class Index extends Service {
 
 
     async execute(payload) {
-        const query = ControllerHelper.buildQuery( (this.trx || Database),(db) => db.query()
+        const query = ControllerHelper.buildQuery((this.trx || Database), (db) => db.query()
             .from('parameters')
             .select(['*']);
-
         return ControllerHelper.searchDatabasePayload(query, payload);
     }
 }

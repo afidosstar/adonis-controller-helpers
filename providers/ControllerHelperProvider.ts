@@ -9,10 +9,10 @@ export default class ControllerHelperProvider {
   constructor(protected app: ApplicationContract) {}
   public register() {
     // Register your own bindings
-    this.app.container.singleton("Adonis/Core/ControllerHelper", () => {
+    this.app.container.singleton("Adonis/Addons/ControllerHelper", () => {
       return ControllerHelper;
     });
-    this.app.container.singleton("Adonis/Core/SearchFilterHelper", () => {
+    this.app.container.singleton("Adonis/Addons/SearchFilterHelper", () => {
       return SearchFilterHelper;
     });
     this.app.container.alias(
