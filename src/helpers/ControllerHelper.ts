@@ -10,7 +10,7 @@
 
 /// <reference path="../../adonis-typings/index.ts" />
 import SearchFilterHelper from "./SearchFilterHelper";
-import Database, {
+import {
   DatabaseContract,
   DatabaseQueryBuilderContract,
 } from "@ioc:Adonis/Lucid/Database";
@@ -146,6 +146,7 @@ export default class ControllerHelper implements ControllerHelperContract {
     perPage
   ) {
     if (/count/.test(query.toString())) {
+      const Database = await ControllerHelper.getDatabase();
       // @ts-ignore
       const { rows } = await Database.raw(`SELECT COUNT(*) ::int as count
                                          FROM (${query
@@ -180,6 +181,7 @@ export default class ControllerHelper implements ControllerHelperContract {
     perPage
   ) {
     if (/count/.test(query.toString())) {
+      const Database = await ControllerHelper.getDatabase();
       // @ts-ignore
       const { rows } = await Database.raw(`SELECT COUNT(*) ::int as count
                                          FROM (${query
@@ -222,6 +224,10 @@ export default class ControllerHelper implements ControllerHelperContract {
 
   public static trans(query, transaction) {
     return transaction ? query.transacting(transaction) : query;
+  }
+
+  private static async getDatabase(): Promise<DatabaseContract> {
+    return (await import("@ioc:Adonis/Lucid/Database")).default;
   }
 }
 
