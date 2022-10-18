@@ -1,6 +1,4 @@
 import { ApplicationContract } from "@ioc:Adonis/Core/Application";
-import ControllerHelper from "../src/helpers/ControllerHelper";
-import SearchFilterHelper from "../src/helpers/SearchFilterHelper";
 import { WrapIgnore } from "../src/helpers/wrap-ignore";
 import { Exception } from "@poppinss/utils";
 
@@ -10,10 +8,10 @@ export default class ControllerHelperProvider {
   public register() {
     // Register your own bindings
     this.app.container.singleton("Adonis/Addons/ControllerHelper", () => {
-      return ControllerHelper;
+      return require("../src/helpers/ControllerHelper").default;
     });
     this.app.container.singleton("Adonis/Addons/SearchFilterHelper", () => {
-      return SearchFilterHelper;
+      return require("../src/helpers/SearchFilterHelper").default;
     });
     this.app.container.alias(
       "Adonis/Core/ControllerHelper",

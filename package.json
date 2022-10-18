@@ -89,5 +89,8 @@
     "providers": [
       "@fickou/adonis-controller-helpers"
     ]
+  },
+  "dependencies": {
+    "@fickou/adonis-audit-database": "^1.0.3"
   }
 }

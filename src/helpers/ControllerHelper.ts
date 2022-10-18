@@ -1,3 +1,14 @@
+/*
+ *  Copyright (c) 2022.
+ *  @created 17/10/2022 - 16:33:6
+ *  @project adonis-controller-helpers
+ *  @author "fiacre.ayedoun@gmail.com"
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
+/// <reference path="../../adonis-typings/index.ts" />
 import SearchFilterHelper from "./SearchFilterHelper";
 import Database, {
   DatabaseContract,
