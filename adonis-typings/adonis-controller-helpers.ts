@@ -87,5 +87,7 @@ declare module "@ioc:Adonis/Addons/ControllerHelper" {
     trans(query: QueryBuilderContract, transaction): QueryBuilderContract;
   }
   const ControllerHelper: ControllerHelperStaticContract;
+  const Service: ServiceContract;
   export default ControllerHelper;
+  export {Service}
 }
