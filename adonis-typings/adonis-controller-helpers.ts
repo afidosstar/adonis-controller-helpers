@@ -18,7 +18,7 @@ declare module "@ioc:Adonis/Addons/ControllerHelper" {
   }
 
   export interface ServiceContract {
-    execute(payload: Record<string, any>): Promise<any>;
+    execute(payload?: Record<string, any>): Promise<any>;
   }
 
   export type QueryBuilderContract =
@@ -89,5 +89,5 @@ declare module "@ioc:Adonis/Addons/ControllerHelper" {
   const ControllerHelper: ControllerHelperStaticContract;
   const Service: ServiceContract;
   export default ControllerHelper;
-  export {Service}
+  export { Service };
 }

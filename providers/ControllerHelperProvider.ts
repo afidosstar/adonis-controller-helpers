@@ -44,6 +44,7 @@ export default class ControllerHelperProvider {
           })),
           ...this.params(),
         };
+        console.log("validated", payload);
       }
       return payload;
     });
@@ -55,7 +56,10 @@ export default class ControllerHelperProvider {
         return this.status(200).json(result.data);
       } else if (result instanceof Exception) {
         throw result;
-      } else return this.status(200).json({ status: 200, data: result });
+      } else if(!result || ControllerHelperProvider.isEmpty(result)) {
+        return this.status(204);
+      }
+      else return this.status(200).json({ status: 200, data: result });
     });
   }
 
