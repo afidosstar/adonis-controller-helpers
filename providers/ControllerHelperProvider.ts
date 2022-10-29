@@ -26,7 +26,7 @@ export default class ControllerHelperProvider {
     // register Honeypot component to Edge
     Request.macro("checkInputs", async function (rule) {
       const body = this.all();
-      let payload = Object.assign({}, body, { ...this.params() });
+      let payload = Object.assign({}, body, { ...this.params() },{...this.allFiles()});
       let realRule = typeof rule === "function" ? rule(payload) : rule;
       console.log("payload", payload);
       //fix bug parameters not validate.
