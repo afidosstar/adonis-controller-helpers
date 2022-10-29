@@ -15,7 +15,7 @@ export default abstract class Service implements ServiceContract {
   constructor(
     protected trx?: TransactionClientContract,
     protected user?: ProviderUserContract<any>,
-    protected event?: object
+    protected event?: any
   ) {}
   public abstract execute(payload?: Record<string, any>): Promise<any>;
 }

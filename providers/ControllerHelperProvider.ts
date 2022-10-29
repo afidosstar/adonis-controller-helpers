@@ -5,23 +5,17 @@ import { Exception } from "@poppinss/utils";
 export default class ControllerHelperProvider {
   public static needsApplication = true;
   constructor(protected app: ApplicationContract) {}
+
   public register() {
     // Register your own bindings
-    this.app.container.singleton("Adonis/Addons/ControllerHelper", () => {
-      return require("../src/helpers/ControllerHelper").default;
+    this.app.container.bind("Adonis/Addons/ControllerHelper", () => {
+      return require("../src/helpers/ControllerHelper");
     });
     this.app.container.singleton("Adonis/Addons/SearchFilterHelper", () => {
-      return require("../src/helpers/SearchFilterHelper").default;
+      return require("../src/helpers/SearchFilterHelper");
     });
-    this.app.container.alias(
-      "Adonis/Core/ControllerHelper",
-      "ControllerHelper"
-    );
-    this.app.container.alias(
-      "Adonis/Core/SearchFilterHelper",
-      "SearchFilterHelper"
-    );
   }
+
   public async boot() {
     const Request = this.app.container.use("Adonis/Core/Request");
     const { schema, validator } = this.app.container.use(
