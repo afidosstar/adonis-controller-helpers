@@ -12,7 +12,7 @@ import { ProviderUserContract } from "@ioc:Adonis/Addons/Auth";
 import { ServiceContract } from "@ioc:Adonis/Addons/ControllerHelper";
 
 export default abstract class Service implements ServiceContract {
-  public constructor(
+  constructor(
     protected trx?: TransactionClientContract,
     protected user?: ProviderUserContract<any>,
     protected event?: object
