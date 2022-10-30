@@ -43,7 +43,11 @@ export default class ControllerHelper implements ControllerHelperContract {
     populates,
     selects
   ) {
-    filter = typeof filter === "string" ? JSON.parse(filter) : filter;
+    filter = filter
+      ? typeof filter === "string"
+        ? JSON.parse(filter)
+        : filter
+      : null;
     pagination =
       typeof pagination === "string"
         ? JSON.parse(pagination)
