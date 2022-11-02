@@ -75,8 +75,13 @@ export default class ControllerHelper implements ControllerHelperContract {
     if (!Array.isArray(payload.populates)) return query;
     populates.forEach((row) => {
       const field = row.trim();
-
-      query.preload(field);
+      const paths = field.split('.').reverse();
+      const path = paths.pop();
+      query.preload(path,paths.reduce((acc,path) => {
+        return function (query){
+          query.preload(path,acc);
+        }
+      }))
     });
     return query;
   }
