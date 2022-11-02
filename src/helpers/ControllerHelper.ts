@@ -76,17 +76,14 @@ export default class ControllerHelper implements ControllerHelperContract {
     populates.forEach((row) => {
       const field = row.trim();
       const paths = field.split(".").reverse();
-      const firstPath = paths.pop();
-      query.preload(
-        firstPath,
-        paths.length > 0
-          ? paths.reduce((acc, path) => {
-              return function (subQuery) {
-                subQuery.preload(path, acc);
-              };
-            })
-          : undefined
-      );
+      // composition function for apply
+      // gof(x) in mathematics
+      const gof = paths.reduce((acc, path) => {
+        return function (subQuery) {
+          subQuery.preload(path, acc);
+        };
+      }, undefined);
+      gof(query);
     });
     return query;
   }
