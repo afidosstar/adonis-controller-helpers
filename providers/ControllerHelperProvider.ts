@@ -1,6 +1,7 @@
 import { ApplicationContract } from "@ioc:Adonis/Core/Application";
 import { WrapIgnore } from "../src/helpers/wrap-ignore";
 import { Exception } from "@poppinss/utils";
+import merge from "lodash/merge";
 
 export default class ControllerHelperProvider {
   public static needsApplication = true;
@@ -26,12 +27,7 @@ export default class ControllerHelperProvider {
     // register Honeypot component to Edge
     Request.macro("checkInputs", async function (rule) {
       const body = this.all();
-      let payload = Object.assign(
-        {},
-        body,
-        { ...this.params() },
-        { ...this.allFiles() }
-      );
+      let payload = merge(body, this.params(), this.allFiles());
       let realRule = typeof rule === "function" ? rule(payload) : rule;
       console.log("payload", payload);
       //fix bug parameters not validate.

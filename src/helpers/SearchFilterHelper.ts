@@ -1,6 +1,8 @@
 import * as _ from "lodash";
 import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
-import { DatabaseQueryBuilderContract } from "@ioc:Adonis/Lucid/Database";
+import Database, {
+  DatabaseQueryBuilderContract,
+} from "@ioc:Adonis/Lucid/Database";
 
 //const _ = require('lodash')
 
@@ -28,15 +30,13 @@ import { DatabaseQueryBuilderContract } from "@ioc:Adonis/Lucid/Database";
 export default class SearchFilterHelper {
   public whereBuilder(query, operator) {
     let isCalledFirstWhere = false;
-    let counter = 0;
+
     return (suffix = "", ...arg) => {
-      console.log(
-        "whereBuilderOperator",
-        arg,
-        operator,
-        isCalledFirstWhere,
-        ++counter
-      );
+      // fix write condition
+      if (typeof arg[0] === "string" && /-/.test(arg[0])) {
+        arg[0] = Database.raw(`(${arg[0]})::varchar`);
+      }
+
       if (!isCalledFirstWhere) {
         isCalledFirstWhere = true;
         return query["where" + _.capitalize(suffix)](...arg);
