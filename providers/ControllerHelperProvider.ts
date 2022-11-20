@@ -51,13 +51,16 @@ export default class ControllerHelperProvider {
         return this.status(200).json(result.data);
       } else if (result instanceof Exception) {
         throw result;
-      } else if (!result || ControllerHelperProvider.isEmpty(result)) {
+      } else if (ControllerHelperProvider.isEmpty(result)) {
         return this.status(204);
       } else return this.status(200).json({ status: 200, data: result });
     });
   }
 
   private static isEmpty(obj) {
+    if(typeof obj === 'undefined' ||  obj === null ){
+      return true;
+    }
     return Object.keys(obj).length === 0;
   }
 }
