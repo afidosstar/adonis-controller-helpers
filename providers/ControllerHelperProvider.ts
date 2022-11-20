@@ -52,15 +52,18 @@ export default class ControllerHelperProvider {
       } else if (result instanceof Exception) {
         throw result;
       } else if (ControllerHelperProvider.isEmpty(result)) {
+        console.log("result", result);
         return this.status(204);
       } else return this.status(200).json({ status: 200, data: result });
     });
   }
 
   private static isEmpty(obj) {
-    if(typeof obj === 'undefined' ||  obj === null ){
+    if (typeof obj === "undefined" || obj === null) {
       return true;
     }
-    return Object.keys(obj).length === 0;
+    if (typeof obj === "object") return Object.keys(obj).length === 0;
+
+    return false;
   }
 }
