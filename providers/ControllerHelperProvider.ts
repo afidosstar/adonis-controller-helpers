@@ -62,6 +62,9 @@ export default class ControllerHelperProvider {
     if (typeof obj === "undefined" || obj === null) {
       return true;
     }
+    if (Array.isArray(obj)) {
+      return false;
+    }
     if (typeof obj === "object") return Object.keys(obj).length === 0;
 
     return false;
