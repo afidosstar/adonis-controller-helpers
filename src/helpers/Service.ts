@@ -8,13 +8,12 @@
  */
 
 import { TransactionClientContract } from "@ioc:Adonis/Lucid/Database";
-import { ProviderUserContract } from "@ioc:Adonis/Addons/Auth";
 import { ServiceContract } from "@ioc:Adonis/Addons/ControllerHelper";
 
 export default abstract class Service implements ServiceContract {
   constructor(
     protected trx?: TransactionClientContract,
-    protected user?: ProviderUserContract<any>,
+    protected user?: any,
     protected event?: any
   ) {}
   public abstract execute(payload?: Record<string, any>): Promise<any>;

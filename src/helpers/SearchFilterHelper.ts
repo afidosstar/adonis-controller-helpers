@@ -4,7 +4,9 @@ import Database, {
   DatabaseQueryBuilderContract,
 } from "@ioc:Adonis/Lucid/Database";
 
-//const _ = require('lodash')
+_.pascalCase = (...args) => _.upperFirst(_.camelCase(...args));
+
+
 
 /**
  * @class
@@ -39,23 +41,23 @@ export default class SearchFilterHelper {
 
       if (!isCalledFirstWhere) {
         isCalledFirstWhere = true;
-        return query["where" + _.capitalize(suffix)](...arg);
+        return query["where" + _.pascalCase(suffix)](...arg);
       }
       // andWhereHas or orWhereHas not exist
       if ((suffix || "").toLowerCase() === "has") {
         return query[this.getMethod(operator)]((qb) =>
-          qb[this.getMethod("") + _.capitalize(suffix)](...arg)
+          qb[this.getMethod("") + _.pascalCase(suffix)](...arg)
         );
       }
       if (["null", "notnull"].includes((suffix || "").toLowerCase())) {
-        return query[this.getMethod("") + _.capitalize(suffix)](...arg);
+        return query[this.getMethod("") + _.pascalCase(suffix)](...arg);
       }
       console.log(
         "Method",
         operator,
-        this.getMethod(operator) + _.capitalize(suffix)
+        this.getMethod(operator) + _.pascalCase(suffix)
       );
-      return query[this.getMethod(operator) + _.capitalize(suffix)](...arg);
+      return query[this.getMethod(operator) + _.pascalCase(suffix)](...arg);
     };
   }
   public static build(
