@@ -28,6 +28,14 @@ import {
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 
 export default class ControllerHelper implements ControllerHelperContract {
+  private static parse(value) {
+    try {
+      if (!value) return null;
+      return typeof value === "string" ? JSON.parse(value) : value;
+    } catch (e) {
+      return null;
+    }
+  }
   /**
    *
    * @param query
@@ -43,11 +51,8 @@ export default class ControllerHelper implements ControllerHelperContract {
     populates,
     selects
   ) {
-    filter = filter
-      ? typeof filter === "string"
-        ? JSON.parse(filter)
-        : filter
-      : null;
+    filter = this.parse(filter);
+
     pagination =
       typeof pagination === "string"
         ? JSON.parse(pagination)
@@ -123,7 +128,7 @@ export default class ControllerHelper implements ControllerHelperContract {
     filter,
     selects
   ) {
-    filter = typeof filter === "string" ? JSON.parse(filter) : filter;
+    filter = this.parse(filter);
     pagination =
       typeof pagination === "string"
         ? JSON.parse(pagination)

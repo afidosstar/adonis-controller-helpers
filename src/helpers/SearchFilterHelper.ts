@@ -6,8 +6,6 @@ import Database, {
 
 _.pascalCase = (...args) => _.upperFirst(_.camelCase(...args));
 
-
-
 /**
  * @class
  *  {
