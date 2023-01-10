@@ -19,7 +19,7 @@ export default class ControllerHelperProvider {
 
   public async boot() {
     const Request = this.app.container.use("Adonis/Core/Request");
-    const { schema, validator } = this.app.container.use(
+    const { schema } = this.app.container.use(
       "Adonis/Core/Validator"
     );
     const Response = this.app.container.use("Adonis/Core/Response");
@@ -35,10 +35,11 @@ export default class ControllerHelperProvider {
       //fix bug parameters not validate.
       if (realRule && !ControllerHelperProvider.isEmpty(realRule)) {
         payload = {
-          ...(await validator.validate({
+          ...(await this.validate({
             schema: schema.create(realRule),
             data: payload,
             messages: realMessages,
+            cacheKey: this.ctx?.routeKey
           })),
           ...this.params(),
         };
