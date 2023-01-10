@@ -25,10 +25,11 @@ export default class ControllerHelperProvider {
     const Response = this.app.container.use("Adonis/Core/Response");
     // IoC container is ready
     // register Honeypot component to Edge
-    Request.macro("checkInputs", async function (rule) {
+    Request.macro("checkInputs", async function (rule,messages) {
       const body = this.all();
       let payload = merge(body, this.params(), this.allFiles());
       let realRule = typeof rule === "function" ? rule(payload) : rule;
+      let realMessages = typeof messages === "function" ? messages(payload) : messages;
       console.log("payload", payload);
       //fix bug parameters not validate.
       if (realRule && !ControllerHelperProvider.isEmpty(realRule)) {
@@ -36,6 +37,7 @@ export default class ControllerHelperProvider {
           ...(await validator.validate({
             schema: schema.create(realRule),
             data: payload,
+            messages: realMessages,
           })),
           ...this.params(),
         };

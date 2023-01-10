@@ -13,7 +13,8 @@ declare module "@ioc:Adonis/Core/Request" {
   export type CheckValidator<T> = (payload: Record<string, any>) => T;
   interface RequestContract {
     checkInputs<T extends TypedSchema>(
-      rule?: CheckValidator<T> | T
+      rule?: CheckValidator<T> | T,
+      messages?: CheckValidator<Record<string, any>> | Record<string, any>
     ): Record<string, any>;
   }
 }

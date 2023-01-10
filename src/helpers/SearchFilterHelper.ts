@@ -94,8 +94,6 @@ export default class SearchFilterHelper {
         const value = this.getValue(filter.operand, filter.value);
         if (!value) break;
         const descriptor = this.getAccessor(filter.field);
-        console.log("descriptor", descriptor);
-        console.log("value", value);
         const operand = this.getOperator(filter.operand);
         if (descriptor.relation) {
           where(
