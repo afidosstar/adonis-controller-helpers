@@ -19,9 +19,7 @@ export default class ControllerHelperProvider {
 
   public async boot() {
     const Request = this.app.container.use("Adonis/Core/Request");
-    const { schema } = this.app.container.use(
-      "Adonis/Core/Validator"
-    );
+    const { schema } = this.app.container.use("Adonis/Core/Validator");
     const Response = this.app.container.use("Adonis/Core/Response");
     // IoC container is ready
     // register Honeypot component to Edge
@@ -39,7 +37,7 @@ export default class ControllerHelperProvider {
             schema: schema.create(realRule),
             data: payload,
             messages: realMessages,
-            cacheKey: this.ctx?.routeKey
+            //cacheKey: this.ctx?.routeKey,
           })),
           ...this.params(),
         };
