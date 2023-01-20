@@ -3,6 +3,7 @@ import { ModelQueryBuilderContract } from "@ioc:Adonis/Lucid/Orm";
 import Database, {
   DatabaseQueryBuilderContract,
 } from "@ioc:Adonis/Lucid/Database";
+import camelCase from "lodash/camelCase";
 
 _.pascalCase = (...args) => _.upperFirst(_.camelCase(...args));
 
@@ -103,14 +104,14 @@ export default class SearchFilterHelper {
           if (paths.length) {
             where(
               "has",
-              firstRelations,
+                camelCase(firstRelations),
               (builder) => {
                 const reversePaths = paths.reverse();
 
                 reversePaths.reduce(
                   (acc, path) => {
                     return function (qb) {
-                      qb.whereHas(path, acc, ">=", 1);
+                      qb.whereHas(camelCase(path), acc, ">=", 1);
                     };
                   },
                   function (qb) {
