@@ -96,15 +96,42 @@ export default class SearchFilterHelper {
         const descriptor = this.getAccessor(filter.field);
         const operand = this.getOperator(filter.operand);
         if (descriptor.relation) {
-          where(
-            "has",
-            descriptor.relation,
-            (builder) => {
-              builder.where(descriptor.name, operand, value);
-            },
-            ">=",
-            1
-          );
+          const paths = descriptor.relation.split(".");
+          const firstRelations = paths.shift();
+          // composition function for apply
+          // gof(x) in mathematics
+          if (paths.length) {
+            where(
+              "has",
+              firstRelations,
+              (builder) => {
+                const reversePaths = paths.reverse();
+
+                reversePaths.reduce(
+                  (acc, path) => {
+                    return function (qb) {
+                      qb.whereHas(path, acc, ">=", 1);
+                    };
+                  },
+                  function (qb) {
+                    qb.where(descriptor.name, operand, value);
+                  }
+                )(builder);
+              },
+              ">=",
+              1
+            );
+          } else {
+            where(
+              "has",
+              firstRelations,
+              (builder) => {
+                builder.where(descriptor.name, operand, value);
+              },
+              ">=",
+              1
+            );
+          }
         } else if (_.isNull(value)) {
           where(operand === "=" ? "Null" : "NotNull", descriptor.name, operand);
         } else if (["Null", "NotNull"].includes(operand)) {
