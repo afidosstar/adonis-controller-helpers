@@ -104,7 +104,7 @@ export default class SearchFilterHelper {
           if (paths.length) {
             where(
               "has",
-                camelCase(firstRelations),
+              camelCase(firstRelations),
               (builder) => {
                 const reversePaths = paths.reverse();
 
