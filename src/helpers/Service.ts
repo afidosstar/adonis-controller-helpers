@@ -7,12 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import {QueryClientContract, TransactionClientContract} from "@ioc:Adonis/Lucid/Database";
+import {
+  TransactionClientContract,
+} from "@ioc:Adonis/Lucid/Database";
 import { ServiceContract } from "@ioc:Adonis/Addons/ControllerHelper";
 
 export default abstract class Service implements ServiceContract {
   constructor(
-    protected trx?: TransactionClientContract| QueryClientContract,
+    protected trx?: TransactionClientContract | any,
     protected user?: any,
     protected event?: any
   ) {}
