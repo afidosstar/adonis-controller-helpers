@@ -151,6 +151,8 @@ export default class SearchFilterHelper {
   public getOperator(operand) {
     switch (operand) {
       case "in":
+        return "in";
+      case "between":
         return "between";
 
       case "neq":

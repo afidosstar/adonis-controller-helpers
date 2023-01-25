@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import {
-  TransactionClientContract,
-} from "@ioc:Adonis/Lucid/Database";
+import { TransactionClientContract } from "@ioc:Adonis/Lucid/Database";
 import { ServiceContract } from "@ioc:Adonis/Addons/ControllerHelper";
 
 export default abstract class Service implements ServiceContract {
