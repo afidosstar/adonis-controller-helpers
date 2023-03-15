@@ -20,7 +20,6 @@ import {
   ControllerHelperContract,
   QueryBuilderContract,
 } from "@ioc:Adonis/Addons/ControllerHelper";
-import camelCase from "lodash/camelCase";
 
 /**
  * @type Error
@@ -86,7 +85,7 @@ export default class ControllerHelper implements ControllerHelperContract {
       // gof(x) in mathematics
       const gof = paths.reduce((acc, path) => {
         return function (subQuery) {
-          subQuery.preload(camelCase(path), acc);
+          subQuery.preload(path, acc);
         };
       }, undefined);
       gof(query);
