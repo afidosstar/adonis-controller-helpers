@@ -21,6 +21,36 @@ import {
   QueryBuilderContract,
 } from "@ioc:Adonis/Addons/ControllerHelper";
 import camelCase from "lodash/camelCase";
+import _ from "lodash";
+
+function reverseFlat(populates) {
+  const data = populates.reduce((acc, row) => {
+    _.set(acc, row, null);
+    return acc;
+  }, {});
+
+  return Object.entries(data).map(function recurseMap([key, value]) {
+    if (value) {
+      return [key].concat(Object.entries(value).map(recurseMap));
+    }
+    return key;
+  });
+}
+
+function compose(
+  query: ModelQueryBuilderContract<any>,
+  value: string[] | string
+) {
+  if (!Array.isArray(value)) {
+    return query.preload(camelCase(value), undefined);
+  }
+  const first: string = value.shift() as string;
+  query.preload(camelCase(first), function (qb) {
+    for (const row of value) {
+      compose(qb, row);
+    }
+  });
+}
 
 /**
  * @type Error
@@ -79,18 +109,19 @@ export default class ControllerHelper implements ControllerHelperContract {
   public static populates(query: ModelQueryBuilderContract<any>, payload) {
     const { populates } = payload;
     if (!Array.isArray(payload.populates)) return query;
-    populates.forEach((row) => {
-      const field = row.trim();
-      const paths = field.split(".").reverse();
-      // composition function for apply
-      // gof(x) in mathematics
-      const gof = paths.reduce((acc, path) => {
-        return function (subQuery) {
-          subQuery.preload(camelCase(path), acc);
-        };
-      }, undefined);
-      gof(query);
-    });
+    reverseFlat(populates).forEach((row) => compose(query, row));
+    // populates.forEach((row) => {
+    //   const field = row.trim();
+    //   const paths = field.split(".").reverse();
+    //   // composition function for apply
+    //   // gof(x) in mathematics
+    //   const gof = paths.reduce((acc, path) => {
+    //     return function (subQuery) {
+    //       subQuery.preload(camelCase(path), acc);
+    //     };
+    //   }, undefined);
+    //   gof(query);
+    // });
     return query;
   }
 
