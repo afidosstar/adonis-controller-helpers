@@ -15,6 +15,6 @@ declare module "@ioc:Adonis/Core/Request" {
     checkInputs<T extends TypedSchema>(
       rule?: CheckValidator<T> | T,
       messages?: CheckValidator<Record<string, any>> | Record<string, any>
-    ): Record<string, any>;
+    ): Promise<Record<string, any>>;
   }
 }
