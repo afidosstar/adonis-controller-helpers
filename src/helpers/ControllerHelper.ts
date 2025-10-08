@@ -62,8 +62,9 @@ export default class ControllerHelper implements ControllerHelperContract {
   private static parse(value) {
     try {
       if (!value) return null;
-      return typeof value === "string" ? JSON.parse(value) : value;
+      return (typeof value === "string" ? JSON.parse(value) : value);
     } catch (e) {
+      console.log("parse error",e);
       return null;
     }
   }
@@ -84,10 +85,7 @@ export default class ControllerHelper implements ControllerHelperContract {
   ) {
     filter = this.parse(filter);
 
-    pagination =
-      typeof pagination === "string"
-        ? JSON.parse(pagination)
-        : Object(pagination);
+    pagination = this.parse(pagination);
 
     this.populates(query, { populates });
 
