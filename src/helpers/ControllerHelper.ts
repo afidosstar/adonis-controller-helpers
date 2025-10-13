@@ -92,7 +92,7 @@ export default class ControllerHelper implements ControllerHelperContract {
     this.selects(query, { selects });
 
     SearchFilterHelper.build(query, pagination, filter);
-    if (pagination.page) {
+    if (pagination?.page) {
       return new WrapIgnore(
         (await ControllerHelper.paginateModel(
           query,
