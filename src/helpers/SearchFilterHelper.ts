@@ -83,13 +83,12 @@ export default class SearchFilterHelper {
   public builder(where, filter) {
     switch (filter.type) {
       case "operator":
+
         where("", (builder) => {
           const subWhere = this.whereBuilder(builder, filter.operand);
-          if(Array.isArray(filter.value)){
-            Array.from(filter.value).forEach((row) => {
-              this.builder(subWhere, row);
-            });
-          }
+          (Array.isArray(filter.value) ? filter.value : []).forEach((row) => {
+            this.builder(subWhere, row);
+          });
         });
         break;
 
