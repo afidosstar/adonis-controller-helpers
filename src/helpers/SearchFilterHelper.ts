@@ -85,9 +85,11 @@ export default class SearchFilterHelper {
       case "operator":
         where("", (builder) => {
           const subWhere = this.whereBuilder(builder, filter.operand);
-          Array.from(filter.value).forEach((row) => {
-            this.builder(subWhere, row);
-          });
+          if(Array.isArray(filter.value)){
+            Array.from(filter.value).forEach((row) => {
+              this.builder(subWhere, row);
+            });
+          }
         });
         break;
 
