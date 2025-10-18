@@ -227,6 +227,7 @@ export default class ControllerHelper implements ControllerHelperContract {
     perPage
   ) {
     perPage = Number(perPage);
+    if(isNaN(perPage)) perPage = 50;
     if (/count/.test(query.toString())) {
       const Database = await ControllerHelper.getDatabase();
       // @ts-ignore
