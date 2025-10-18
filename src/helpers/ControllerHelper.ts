@@ -226,6 +226,7 @@ export default class ControllerHelper implements ControllerHelperContract {
     page,
     perPage
   ) {
+    perPage = Number(perPage);
     if (/count/.test(query.toString())) {
       const Database = await ControllerHelper.getDatabase();
       // @ts-ignore
