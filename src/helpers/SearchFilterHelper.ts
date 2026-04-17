@@ -97,6 +97,11 @@ export default class SearchFilterHelper {
         if (!value) break;
         const descriptor = this.getAccessor(filter.field);
         const operand = this.getOperator(filter.operand);
+        // Cast la colonne en TEXT pour autoriser ILIKE sur des colonnes non textuelles
+        // (ex: integer). PostgreSQL optimise le cast sur les colonnes déjà textuelles.
+        const column = ["ilike", "not ilike"].includes(operand)
+          ? Database.raw(`CAST("${descriptor.name}" AS TEXT)`)
+          : descriptor.name;
         if (descriptor.relation) {
           const paths = descriptor.relation.split(".");
           const firstRelations = paths.shift();
@@ -116,7 +121,7 @@ export default class SearchFilterHelper {
                     };
                   },
                   function (qb) {
-                    qb.where(descriptor.name, operand, value);
+                    qb.where(column, operand, value);
                   }
                 )(builder);
               },
@@ -128,7 +133,7 @@ export default class SearchFilterHelper {
               "has",
               firstRelations,
               (builder) => {
-                builder.where(descriptor.name, operand, value);
+                builder.where(column, operand, value);
               },
               ">=",
               1
@@ -139,7 +144,7 @@ export default class SearchFilterHelper {
         } else if (["Null", "NotNull"].includes(operand)) {
           where(operand, descriptor.name, operand);
         } else {
-          where("", descriptor.name, operand, value);
+          where("", column, operand, value);
         }
         break;
     }
