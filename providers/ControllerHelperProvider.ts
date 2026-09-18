@@ -32,13 +32,31 @@ export default class ControllerHelperProvider {
       console.log("payload", payload);
       //fix bug parameters not validate.
       if (realRule && !ControllerHelperProvider.isEmpty(realRule)) {
+        const validated = await this.validate({
+          schema: schema.create(realRule),
+          data: payload,
+          messages: realMessages,
+          //cacheKey: this.ctx?.routeKey,
+        });
+        // `pagination`/`filter`/`selects`/`populates` sont le vocabulaire
+        // propre à ce paquet (`ControllerHelper.search`) : elles doivent
+        // survivre même si le schéma du service ne les déclare pas, sinon
+        // un `Index*` qui valide le moindre paramètre perd silencieusement
+        // pagination/filtre (cf. instructions.md).
+        const reservedSearchKeys = [
+          "pagination",
+          "filter",
+          "selects",
+          "populates",
+        ];
+        const passthrough: Record<string, any> = {};
+        for (const key of reservedSearchKeys) {
+          if (!(key in validated) && key in payload)
+            passthrough[key] = payload[key];
+        }
         payload = {
-          ...(await this.validate({
-            schema: schema.create(realRule),
-            data: payload,
-            messages: realMessages,
-            //cacheKey: this.ctx?.routeKey,
-          })),
+          ...validated,
+          ...passthrough,
           ...this.params(),
         };
         console.log("validated", payload);

@@ -105,8 +105,12 @@ export default class ControllerHelper implements ControllerHelperContract {
   }
 
   public static populates(query: ModelQueryBuilderContract<any>, payload) {
-    const { populates } = payload;
-    if (!Array.isArray(payload.populates)) return query;
+    // `pagination`/`filter` passent par `this.parse()` (JSON.parse si
+    // reçus en chaîne) ; `populates` en a besoin tout autant dès qu'il
+    // arrive en JSON plutôt qu'en tableau déjà construit par le client HTTP.
+    let populates = payload.populates;
+    if (typeof populates === "string") populates = this.parse(populates);
+    if (!Array.isArray(populates)) return query;
     reverseFlat(populates).forEach((row) => compose(query, row));
     // populates.forEach((row) => {
     //   const field = row.trim();

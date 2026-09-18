@@ -42,8 +42,10 @@ export default class SearchFilterHelper {
         isCalledFirstWhere = true;
         return query["where" + _.pascalCase(suffix)](...arg);
       }
-      // andWhereHas or orWhereHas not exist
-      if ((suffix || "").toLowerCase() === "has") {
+      // andWhereHas/orWhereHas existent, mais pas andWhereDoesntHave (seuls
+      // whereDoesntHave et orWhereDoesntHave existent côté Lucid) : on
+      // repasse par un callback and/orWhere pour les deux verbes.
+      if (["has", "doesnthave"].includes((suffix || "").toLowerCase())) {
         return query[this.getMethod(operator)]((qb) =>
           qb[this.getMethod("") + _.pascalCase(suffix)](...arg)
         );
@@ -83,7 +85,6 @@ export default class SearchFilterHelper {
   public builder(where, filter) {
     switch (filter.type) {
       case "operator":
-
         where("", (builder) => {
           const subWhere = this.whereBuilder(builder, filter.operand);
           (Array.isArray(filter.value) ? filter.value : []).forEach((row) => {
@@ -94,7 +95,11 @@ export default class SearchFilterHelper {
 
       case "condition":
         const value = this.getValue(filter.operand, filter.value);
-        if (!value) break;
+        // Ne pas confondre "valeur absente" avec une valeur légitimement
+        // falsy (`false`, `0`) : seules `undefined` et la chaîne vide
+        // signifient "aucun filtre saisi". `null` reste géré plus bas
+        // (`_.isNull(value)`), comportement inchangé.
+        if (value === undefined || value === "") break;
         const descriptor = this.getAccessor(filter.field);
         const operand = this.getOperator(filter.operand);
         // Cast la colonne en TEXT pour autoriser ILIKE sur des colonnes non textuelles
@@ -105,35 +110,41 @@ export default class SearchFilterHelper {
         if (descriptor.relation) {
           const paths = descriptor.relation.split(".");
           const firstRelations = paths.shift();
+          // `is-null`/`is-not-null` sur un champ relationnel : un simple
+          // whereHas(relation, whereNull(champ)) exigerait qu'une ligne
+          // liée existe, ce qui exclut justement "aucune ligne liée" — le
+          // sens réel de "vide" attendu par l'utilisateur. On bascule le
+          // verbe englobant sur `doesntHave` pour is-null (aucune ligne
+          // liée avec ce champ renseigné), on garde `has` pour is-not-null.
+          const isNullOperand = operand === "Null" || operand === "NotNull";
+          const outerVerb = operand === "Null" ? "doesntHave" : "has";
+          const leaf = isNullOperand
+            ? (qb) => qb.whereNotNull(column)
+            : (qb) => qb.where(column, operand, value);
           // composition function for apply
           // gof(x) in mathematics
           if (paths.length) {
             where(
-              "has",
+              outerVerb,
               camelCase(firstRelations),
               (builder) => {
                 const reversePaths = paths.reverse();
 
-                reversePaths.reduce(
-                  (acc, path) => {
-                    return function (qb) {
-                      qb.whereHas(camelCase(path), acc, ">=", 1);
-                    };
-                  },
-                  function (qb) {
-                    qb.where(column, operand, value);
-                  }
-                )(builder);
+                reversePaths.reduce((acc, path) => {
+                  return function (qb) {
+                    qb.whereHas(camelCase(path), acc, ">=", 1);
+                  };
+                }, leaf)(builder);
               },
               ">=",
               1
             );
           } else {
             where(
-              "has",
+              outerVerb,
               firstRelations,
               (builder) => {
-                builder.where(column, operand, value);
+                leaf(builder);
               },
               ">=",
               1
