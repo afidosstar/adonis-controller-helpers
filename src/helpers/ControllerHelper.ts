@@ -127,7 +127,25 @@ export default class ControllerHelper implements ControllerHelperContract {
     return query;
   }
 
+  /**
+   * Corbeille : `trashed` ∈ without (défaut) | with | only. Sans effet sur
+   * un modèle qui n'est pas en soft delete ou sur une valeur inconnue.
+   */
+  public static trashed(
+    query: ModelQueryBuilderContract<any>,
+    payload: Record<string, any>
+  ) {
+    const mode = payload?.trashed;
+    if (mode !== "with" && mode !== "only") return query;
+    const model: any = (query as any).model;
+    if (!model || !("ignoreDeleted" in model)) return query;
+    const method = mode === "with" ? "withTrashed" : "onlyTrashed";
+    if (typeof (query as any)[method] === "function") (query as any)[method]();
+    return query;
+  }
+
   public static searchPayload(query: ModelQueryBuilderContract<any>, payload) {
+    ControllerHelper.trashed(query, payload);
     return ControllerHelper.search(
       query,
       payload.pagination,

@@ -41,6 +41,11 @@ declare module "@ioc:Adonis/Addons/ControllerHelper" {
       payload
     ): ModelQueryBuilderContract<any>;
 
+    trashed(
+      query: ModelQueryBuilderContract<any>,
+      payload: Record<string, any>
+    ): ModelQueryBuilderContract<any>;
+
     searchPayload(
       query: ModelQueryBuilderContract<any>,
       payload
